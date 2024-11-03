@@ -7,19 +7,19 @@ public enum PrizeMoneyByRank {
     FOURTH(4,50000),
     FIFTH(3,5000);
 
-        private final int matchCount;
-        private final int prizeMoney;
+    private final int matchCount;
+    private final int prizeMoney;
 
 
-        PrizeMoneyByRank(int matchCount, int prizeMoney){
-            this.matchCount = matchCount;
-            this.prizeMoney = prizeMoney;
-        }
-        public int getMatchCount(){
-            return  matchCount;
-        }
+    PrizeMoneyByRank(int matchCount, int prizeMoney){
+        this.matchCount = matchCount;
+        this.prizeMoney = prizeMoney;
+    }
+    public int getMatchCount(){
+        return  matchCount;
+    }
 
-        public int getPrizeMoney() {
-            return prizeMoney;
-        }
+    public int getPrizeMoney() {
+        return prizeMoney;
+    }
 }
