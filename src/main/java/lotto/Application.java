@@ -4,10 +4,12 @@ import camp.nextstep.edu.missionutils.Console;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Application {
     private static final int PRICEPERLOTTO = 1000;
+
     public static void main(String[] args) {
         // TODO: 프로그램 구현
         int payMoney = getPayMoney();
@@ -15,14 +17,16 @@ public class Application {
         List<Lotto> myLottoNum = myLottoNum(lottoPurchasesNum);
         List<Integer> luckyNum = getLuckyNum();
         int bonusNumber = getBonusNumber();
+        matchByLotto(luckyNum,myLottoNum,lottoPurchasesNum,bonusNumber);
 
     }
 
-    public static List<Integer> lottoNumberGenerator(){
-        List<Integer> lottoNumber = Randoms.pickUniqueNumbersInRange(1,45,6);
+    public static List<Integer> lottoNumberGenerator() {
+        List<Integer> lottoNumber = Randoms.pickUniqueNumbersInRange(1, 45, 6);
         return lottoNumber;
     }
-    public static int getPayMoney(){
+
+    public static int getPayMoney() {
         while (true) {
             try {
                 System.out.println("구입금액을 입력해 주세요.");
@@ -37,29 +41,31 @@ public class Application {
         }
     }
 
-    public static int checkPayMoney(String unCheckedPayMoney){
+    public static int checkPayMoney(String unCheckedPayMoney) {
         int checkPayMoney = Integer.parseInt(unCheckedPayMoney);
         if (checkPayMoney < PRICEPERLOTTO || checkPayMoney % PRICEPERLOTTO > 0) {
             throw new IllegalArgumentException("[ERROR] 구매금액은 1000으로 나누어 떨어져야합니다.");
         }
         return checkPayMoney;
     }
-    public static int calculateLottoPurchasesNum (int payMoney) {
+
+    public static int calculateLottoPurchasesNum(int payMoney) {
         int lottoPurchasesNum = payMoney / PRICEPERLOTTO;
         System.out.println(lottoPurchasesNum + "개를 구매했습니다.");
         return lottoPurchasesNum;
     }
 
-    public static List<Lotto> myLottoNum(int lottoPurchasesNum){
+    public static List<Lotto> myLottoNum(int lottoPurchasesNum) {
         List<Lotto> myLottoNum = new ArrayList<>();
-        for(int i=1;i<lottoPurchasesNum+1;i++ ){
+        for (int i = 1; i < lottoPurchasesNum + 1; i++) {
             Lotto lotto = new Lotto(lottoNumberGenerator());
             myLottoNum.add(lotto);
             System.out.println(lotto);
         }
         return myLottoNum;
     }
-    public static List<Integer> getLuckyNum(){
+
+    public static List<Integer> getLuckyNum() {
         while (true) {
             try {
                 System.out.println("\n당첨 번호를 입력해 주세요.");
@@ -74,8 +80,9 @@ public class Application {
             }
         }
     }
-    public static List<Integer> checkLuckyNum(String unCheckedLuckyNumber){
-        StringTokenizer tokenizer = new StringTokenizer(unCheckedLuckyNumber,",");
+
+    public static List<Integer> checkLuckyNum(String unCheckedLuckyNumber) {
+        StringTokenizer tokenizer = new StringTokenizer(unCheckedLuckyNumber, ",");
         List<Integer> checkLuckyNum = new ArrayList<>();
         while (tokenizer.hasMoreTokens()) {
             int token = Integer.parseInt(tokenizer.nextToken());
@@ -83,7 +90,8 @@ public class Application {
         }
         return checkLuckyNum;
     }
-    public  static int getBonusNumber(){
+
+    public static int getBonusNumber() {
         while (true) {
             try {
                 System.out.println("\n보너스 번호를 입력해 주세요.");
@@ -97,6 +105,7 @@ public class Application {
             }
         }
     }
+
     public static int checkBonusNumber(String unCheckedBonusNumber) {
         int checkBonusNumber = Integer.parseInt(unCheckedBonusNumber);
         if (checkBonusNumber < 0 || checkBonusNumber > 45) {
@@ -104,6 +113,37 @@ public class Application {
         }
         return checkBonusNumber;
     }
+
+    public static int getMatchPoint(List<Integer> luckyNum, List<Integer> lottoNum) {
+        int matchPoint = 0;
+        for (int i = 0; i < luckyNum.size(); i++) {
+            if (lottoNum.contains(luckyNum.get(i))) {
+                matchPoint += 1;
+            }
+        }
+        return matchPoint;
+    }
+    public static int[][] matchByLotto(List<Integer> luckyNum, List<Lotto> myLottoNum,int purchaseNum,int bonusNum){
+        int[][] matchPoints = new int[purchaseNum][2];
+        for(int i = 0; i < purchaseNum;i++){
+            int matchPoint = getMatchPoint(luckyNum, myLottoNum.get(i).getNumbers());
+            matchPoints[i][0]=matchPoint;
+            if(matchPoint==5){
+                matchPoints[i][1]=calculateSecondtoThird(myLottoNum.get(i).getNumbers(),bonusNum);
+            }
+        }
+        return matchPoints;
+    }
+    public static int calculateSecondtoThird(List<Integer> myLottoNum,int bonusNumber){
+        for (int i = 0; i < myLottoNum.size(); i++) {
+            if (myLottoNum.contains(bonusNumber)) {
+                return  1;
+            }
+        }
+        return 0;
+    }
 }
+
+
 
 
